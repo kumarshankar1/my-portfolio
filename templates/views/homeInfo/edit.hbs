@@ -1,0 +1,206 @@
+{{>header}}
+{{>sidebar}}
+<div class="card mb-3">
+    <!--<div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?php echo base_url('assets/admin/');?>img/icons/spot-illustrations/corner-4.png);"></div>-->
+    <div class="card-header">
+      <div class="row flex-between-center">
+        <div class="col d-flex justify-content-between">
+          <h5 class="mb-0">{{data}}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="card-body bg-light">
+        <form>
+        <div class="mb-3 title_name-cont">
+          <label class="form-label" for="company">Head Title</label>
+          <input type="hidden" id="userId" value="{{result._id}}">
+          <input class="form-control" id="title_name" type="text" placeholder=" Title" value="{{result.title}}" />
+          <small class="text-danger font-weight-bold" id="title_name-error"></small>
+        </div>    
+        
+        <div class="mb-3 name-cont">
+            <label class="form-label" for="name">Profile Name</label>
+            <input class="form-control" id="name" type="text" placeholder="Name" value="{{result.name}}"/>
+            <small class="text-danger" id="name-error"></small>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3">Profile Image</label>
+            <div class="white-box">
+              <input type="file" id="profile_image" name="profile_image" class="dropify" data-default-file="{{IMAGEURL}}{{result.image}}" /> 
+            </div>
+        </div>
+       
+        <div  class="form-group">
+          <label for="postName">Description</label>
+            <textarea id="description" name="description" class="form-control" row="5">{{result.description}}</textarea>
+            <span style="color: red" class="error-text" id="description-error"></span>
+        </div>
+        
+        <div id="submit-btn-container">
+            <button class="btn btn-success" type="button" id="save-btn-custom">Submit</button>    
+        </div>
+        </form>
+    </div>
+</div>
+{{>footer}}
+<script src="https://cdn.ckeditor.com/4.16.1/standard/ckeditor.js"></script>
+ <script>
+ CKEDITOR.replace('description' );about_desc
+ 
+</script>
+<script>
+    $(document).ready(function() 
+    {
+        $('.dropify').dropify();
+    });
+    $(document).on('change','#file',function(){
+        $('#image-err').text('');    
+    });
+</script>
+<script>
+    $(document).on('click','#save-btn-custom',function(){ 
+        var reg_email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+        var title_name = $('#title_name').val();
+        var name = $('#name').val();
+        var userId = $('#userId').val();
+        var profile_image = $('#profile_image').prop('files')[0];
+        
+        var description = CKEDITOR.instances['description'].getData();
+        
+        if(title_name=="")
+        {
+            $('.title_name-cont').removeClass('mb-3');
+            $('#title_name-error').text('Enter Title Name.*').css('font-style','italic');    
+        }else{
+            $('.title_name-cont').addClass('mb-3');
+            $('#title_name-error').text('');
+        }
+        
+        if(name=="")
+        {
+            $('.name-cont').removeClass('mb-3');
+            $('#name-error').text('Enter Name .*').css('font-style','italic');    
+        }else{ 
+            $('.name-cont').addClass('mb-3');
+            $('#name-error').text('');
+        }
+        
+        if(name!="" && title_name !="")
+        {
+            var fd = new FormData();
+            
+            fd.append('name',name);
+            fd.append('title_name',title_name);
+            fd.append('userId',userId);
+            fd.append('profile_image',profile_image);
+            fd.append('description',description);
+            
+            $.ajax({
+                url: "/admin/update-homeInfo",
+                type: "POST",
+                data: fd,
+                contentType: false,
+                processData: false,
+                //dataType: "JSON", 
+               
+                success:function(data) {
+                  //console.log(data)
+                  if(data === 'Record Updated') {
+                      sessionStorage.setItem('updated',true);
+                      window.location.href="/admin/homeInfo";
+                  }
+                
+                }
+            });
+                
+        }
+        
+    });
+</script>
+<script>
+    (function($) {
+        $.fn.inputFilter = function(inputFilter) {
+        return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          } else {
+            this.value = "";
+          }
+        });
+      };
+    }(jQuery));
+    $("#mobile").inputFilter(function(value) {
+  return /^-?\d*$/.test(value); });
+</script>
+
+<script>
+    var Password = {
+ 
+  _pattern : /[a-zA-Z0-9_\-\+\.]/,
+  
+  
+  _getRandomByte : function()
+  {
+    $('.password-cont').addClass('mb-3');
+    $('#password-error').text("");
+    // http://caniuse.com/#feat=getrandomvalues
+    if(window.crypto && window.crypto.getRandomValues) 
+    {
+      var result = new Uint8Array(1);
+      window.crypto.getRandomValues(result);
+      return result[0];
+    }
+    else if(window.msCrypto && window.msCrypto.getRandomValues) 
+    {
+      var result = new Uint8Array(1);
+      window.msCrypto.getRandomValues(result);
+      return result[0];
+    }
+    else
+    {
+      return Math.floor(Math.random() * 256);
+    }
+  },
+  
+  generate : function(length)
+  {
+    return Array.apply(null, {'length': length})
+      .map(function()
+      {
+        var result;
+        while(true) 
+        {
+          result = String.fromCharCode(this._getRandomByte());
+          if(this._pattern.test(result))
+          {
+            return result;
+          }
+        }        
+      }, this)
+      .join('');  
+  }    
+    
+};
+</script>
+<script>
+  $(function () {
+  
+    if (sessionStorage.getItem('updated')) {
+      swal({
+        title: "Success.",
+        text: "Data updated successfully.!",
+        type: "success",
+        confirmButtonClass: 'btn-primary btn-sm',
+        confirmButtonText: 'OK'
+      });
+      sessionStorage.removeItem('updated');
+    }
+
+    
+  });
+</script>

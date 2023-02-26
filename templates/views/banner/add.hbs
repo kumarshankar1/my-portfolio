@@ -1,0 +1,66 @@
+{{>header}}
+{{>sidebar}}
+<div class="card mb-3">
+    <!--<div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?php echo base_url('assets/admin/');?>img/icons/spot-illustrations/corner-4.png);"></div>-->
+    <div class="card-header">
+      <div class="row flex-between-center">
+        <div class="col d-flex justify-content-between">
+          <h5 class="mb-0">{{data}}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="card-body bg-light">
+        <form method="post" enctype="multipart/form-data" action="/create-song">
+        <div class="mb-3 name-cont">
+          <label class="form-label" for="company">Title</label>
+          <input class="form-control" name="name" id="title" type="text" placeholder="Title"  />
+          <small class="text-danger font-weight-bold" id="title-error"></small>
+        </div>   
+       
+        <div class="mb-3">
+            <label class="control-label col-md-3">Upload Image</label>
+            <div class="white-box">
+                <input type="file" id="uploaded_file" name="uploaded_file" /> 
+            </div>
+        </div>
+        <input type="submit" value="Insert" class="btn btn-primary">
+        {{!-- <div id="submit-btn-container">
+            <button class="btn btn-success" type="button" >Submit</button>    
+        </div> --}}
+        </form>
+    </div>
+</div>
+{{>footer}}
+<script>
+    $(document).on('click','#save-btn-custom1',function(){ 
+        var reg_email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+        var title = $('#title').val();
+        var files = $('#file')[0].files[0];
+        
+        if(title=="")
+        {
+            $('.name-cont').removeClass('mb-3');
+            $('#title-error').text('Enter Title.*').css('font-style','italic');    
+        }else{
+            $('.name-cont').addClass('mb-3');
+            $('#title-error').text('');
+        }
+        
+        if(title!="")
+        {
+            alert(title);
+            $.post("/create-song",{title:title,uploaded_file:files},function(data){
+            console.log(data);
+                if(data === 'success') {
+                  sessionStorage.setItem('saved',true);
+                  window.location.href="/song";
+                }
+            });    
+        }  
+    });
+</script>
+<script>
+    $(function () {
+        $('.select2').select2();
+    });
+</script>

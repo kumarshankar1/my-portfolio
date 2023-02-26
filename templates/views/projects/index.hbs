@@ -1,0 +1,165 @@
+{{>header}}
+{{>sidebar}}
+<div class="card mb-3">
+  <!--<div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?php echo base_url('assets/admin/');?>img/icons/spot-illustrations/corner-4.png);"></div>-->
+  <div class="card-header">
+    <div class="row flex-between-center">
+      <div class="col d-flex justify-content-between">
+        <h5 class="mb-0">{{data}}</h5>
+        <a href="/admin/add-project" class="btn btn-falcon-default btn-sm" type="button">
+          <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>New
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="card-body bg-light">
+    <table id="custom-data-table" class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th>ID NO#</th>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Site URL</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each project}}
+        <tr id="row{{_id}}">
+          <td>{{_id}}</td>
+          <td>
+            <img src="{{IMAGEURL}}{{image}}" style="height:50px; width:50px;">
+          </td>
+          <td>{{title}}</td>
+          <td>{{site_url}}</td>
+          
+          <td>
+            <select class="status-select form-control form-control-success" data-key="{{this._id}}">
+              <option value="1" {{#if_cond status '==' '1' }}selected{{else}}''{{/if_cond}}>Active</option>
+              <option value="0" {{#if_cond status '==' '0' }}selected{{else}}''{{/if_cond}}>Deactive</option>
+            </select>
+          </td>
+          <td>
+            <a href="/admin/edit-project?id={{this._id}}" class="btn btn-info me-1 mb-1 btn-sm"><i
+                class="fas fa-edit"></i></a>
+            <a class="btn btn-danger me-1 mb-1 btn-sm" onclick="delete_record('{{_id}}')"><i
+                class="fas fa-trash-alt"></i></a>
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
+{{>footer}}
+<script>
+  $(document).ready(function(){
+    $(document).on('click','.delete-record', function(){
+      let id = $(this).attr('data-item');
+      alert(id)
+    })
+
+  })
+</script>
+
+<script>
+  function delete_record(id) {
+   
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this Data.!",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonClass: "btn-danger",
+      confirmButtonText: "Yes, delete it.!",
+      cancelButtonText: "No, cancel.!",
+      closeOnConfirm: false,
+      closeOnCancel: false
+    }, function (isConfirm) {
+      if (isConfirm) {
+        var table = 'projects';
+        $.post("/admin/delete-project", { id: id }, function (data) {
+          console.log(data);
+          if (data == "Deleted") {
+            $("#row" + id).remove();
+            swal("Deleted.!", "data has been deleted.", "success");
+          }
+        });
+
+      } else {
+        swal("Cancelled", "Your Data is safe :)", "error");
+      }
+    });
+  }
+</script>
+<script>
+  $(document).on('change', '.status-select', function () {
+    var status = $(this).val();
+    var table = 'projects';
+    var id = $(this).attr('data-key');
+    $.post("/admin/project-status-update", { id: id, status: status }, function (data) {
+      if (data == "Record Updated") {
+        swal("status_updated.!", "status has been updated.", "success");
+        //window.location.reload();
+
+      }
+    });
+
+  });
+</script>
+<script>
+  $(function () {
+    if (sessionStorage.getItem('status_updated')) {
+      swal({
+        title: "Success.",
+        text: "Status updated successfully.!",
+        type: "success",
+        confirmButtonClass: 'btn-primary btn-sm',
+        confirmButtonText: 'OK'
+      });
+      sessionStorage.removeItem('updated');
+    }
+    if (sessionStorage.getItem('updated')) {
+      swal({
+        title: "Success.",
+        text: "Data updated successfully.!",
+        type: "success",
+        confirmButtonClass: 'btn-primary btn-sm',
+        confirmButtonText: 'OK'
+      });
+      sessionStorage.removeItem('updated');
+    }
+
+    if (sessionStorage.getItem('saved')) {
+      swal({
+        title: "Success.",
+        text: "data created successfully.!",
+        type: "success",
+        confirmButtonClass: 'btn-primary btn-sm',
+        confirmButtonText: 'OK'
+      });
+      sessionStorage.removeItem('saved');
+    }
+  });
+</script>
+<script>
+  $(function () {
+    $("#custom-data-table").DataTable({
+      language: {
+        paginate: {
+          next: '&#8594;', // or '→'
+          previous: '&#8592;' // or '←' 
+        }
+      },
+      "bInfo": false,
+      "responsive": true, "lengthChange": true, "autoWidth": true,
+      "buttons": ["print", "excel", "pdf"],
+      'columnDefs': [{
+        'targets': [1, 2, 3, 4], /* column index */
+        'orderable': true, /* true or false */
+      }]
+    }).buttons().container().appendTo('#custom-data-table_wrapper .col-md-6:eq(0)');
+    $("#custom-data-table_wrapper.row").last().css("background-color", "red");
+  });
+</script>

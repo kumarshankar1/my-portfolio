@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Admin Login | My-Portfolio - Dashboard</title>
+
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link rel="apple-touch-icon" sizes="57x57" href="img/custom/favicons/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="img/custom/favicons/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="img/custom/favicons/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/custom/favicons/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="img/custom/favicons/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/custom/favicons/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="img/custom/favicons/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/custom/favicons/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/custom/favicons/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="img/custom/favicons/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/custom/favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="img/custom/favicons/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/custom/favicons/favicon-16x16.png">
+    <link rel="manifest" href="img/custom/favicons/manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <script src="admin/js/config.js"></script>
+    <script src="admin/vendors/overlayscrollbars/OverlayScrollbars.min.js"></script>
+
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link rel="preconnect" href="https://fonts.gstatic.com/">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
+        rel="stylesheet">
+    <link href="admin/vendors/overlayscrollbars/OverlayScrollbars.min.css" rel="stylesheet">
+    <link href="admin/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
+    <link href="admin/css/theme.min.css" rel="stylesheet" id="style-default">
+    <link href="admin/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
+    <link href="admin/css/user.min.css" rel="stylesheet" id="user-style-default">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+        <div class="container" data-layout="container">
+            <script>
+                var isFluid = JSON.parse(localStorage.getItem('isFluid'));
+                if (isFluid) {
+                    var container = document.querySelector('[data-layout]');
+                    container.classList.remove('container');
+                    container.classList.add('container-fluid');
+                }
+            </script>
+            <div class="row flex-center min-vh-100 py-6">
+                <div class="col-sm-10 col-md-8 col-lg-6 col-xl-5 col-xxl-4">
+                    <a class="d-flex flex-center mb-4" href="">
+                        <h3>My-Portfolio</h3>
+                        {{!-- <img class="me-2" src="admin/img/custom/logo.gif" alt="" width="200" /> --}}
+                    </a>
+                    <div class="card">
+                        <div class="card-body p-4 p-sm-5">
+                            <div class="row flex-between-center mb-2">
+                                <div class="col-auto">
+                                    <h5>Admin Log in</h5>
+                                </div>
+                            </div>
+                            <form>
+                                <div class="mb-3 user-name-con">
+                                    <input class="form-control" type="text" placeholder="Email address"
+                                        id="user-name" />
+                                    <span style="color:red" id="user-name-err"></span>
+                                </div>
+                                <div class="mb-3 password-con">
+                                    <input class="form-control" type="password" placeholder="Password" id="password" />
+                                    <span id="password-err" style="color:red"></span>
+                                </div>
+                                <div class="row flex-between-center">
+                                </div>
+                                <div class="mb-3" id="button-container">
+                                    <button class="btn btn-success d-block w-100 mt-3" id="login-submit-btn"
+                                        type="button" name="submit">Log in</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main><!-- ===============================================-->
+    <!--    End of Main Content-->
+
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="admin/vendors/popper/popper.min.js"></script>
+    <script src="admin/vendors/bootstrap/bootstrap.min.js"></script>
+    <script src="admin/vendors/anchorjs/anchor.min.js"></script>
+    <script src="admin/vendors/is/is.min.js"></script>
+    <script src="admin/vendors/fontawesome/all.min.js"></script>
+    <script src="admin/vendors/lodash/lodash.min.js"></script>
+    <script src="admin/vendors/polyfill.io/v3/polyfill.min58be.js?features=window.scroll"></script>
+    <script src="admin/vendors/list.js/list.min.js"></script>
+    <script src="admin/js/theme.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#login-submit-btn").on('click', function () {
+                var user_name = $('#user-name').val();
+                var password = $('#password').val();
+                var reg_email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+                if (user_name == "") {
+                    $('#user-name-con').removeClass('mb-3');
+                    $('#user-name-err').text('Enter User Name.*').css({ 'color': 'red', 'font-style': 'italic' });
+                } else if (!reg_email.test(user_name)) {
+                    $('#user-name-con').removeClass('mb-3');
+                    $('#user-name-err').text('Enter valid email address.*').css({ 'color': 'red', 'font-style': 'italic' });
+                } else {
+                    $('#user-name-con').addClass('mb-3');
+                    $('#user-name-err').text('');
+                }
+
+                if (password == "") {
+                    $('#password-con').removeClass('mb-3');
+                    $('#password-err').text('Enter Password.*').css({ 'color': 'red', 'font-style': 'italic' });
+                } else {
+                    $('#password-con').addClass('mb-3');
+                    $('#password-err').text('');
+                }
+
+
+                if (user_name != "" && password != "" && reg_email.test(user_name)) {
+                    $.post("/admin/login", { user_name: user_name, password: password }, function (data) {
+                    
+                        if (data === 'success') {
+                            window.location.href = "/admin/dashboard";
+                        } else if (data === 'password invalid') {
+                            $("#password-err").html('Password did not match');
+                            $("#password-con").val('');
+                        }else if (data === 'invalid email') {
+                            $("#user-name-err").html('Enter Valid Username');
+                            $("#user-name-con").val('');
+                        } else {
+                            $("#password-err").html('Username or Password did not match');
+                            $("#password-con").val('');
+                        }
+                    });
+                } else {
+                    $("#password-err").html('Please Enter your Password');
+                }
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+{{>header}}
+{{>sidebar}}
+<div class="card mb-3">
+  <!--<div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?php echo base_url('assets/admin/');?>img/icons/spot-illustrations/corner-4.png);"></div>-->
+  <div class="card-header">
+    <div class="row flex-between-center">
+      <div class="col d-flex justify-content-between">
+        <h5 class="mb-0">New Category</h5>
+      </div>
+    </div>
+  </div>
+  <div class="card-body bg-light">
+    <form>
+      <div class="mb-3 name-cont">
+        <label class="form-label" for="company">Title</label>
+        <input class="form-control" id="title" type="text" placeholder="Title" />
+        <small class="text-danger font-weight-bold" id="title-error"></small>
+      </div>
+
+      <div id="submit-btn-container">
+        <button class="btn btn-success" type="button" id="save-btn-custom">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
+{{>footer}}
+<script>
+  $(document).on('click', '#save-btn-custom', function () {
+    var reg_email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+    var title = $('#title').val();
+
+
+    if (title == "") {
+      $('.name-cont').removeClass('mb-3');
+      $('#title-error').text('Enter Title.*').css('font-style', 'italic');
+    } else {
+      $('.name-cont').addClass('mb-3');
+      $('#title-error').text('');
+    }
+
+
+    if (title != "") {
+      $.post("/admin/create-category", { title: title }, function (data) {
+        console.log(data);
+        if (data === 'success') {
+          sessionStorage.setItem('saved', true);
+          window.location.href = "/admin/get-categories";
+        } else if (data === 'already') {
+          $('.name-cont').removeClass('mb-3');
+          $('#title-error').text('Title already registered.*').css("font-style", "italic");
+        }
+      });
+    }
+  });
+</script>

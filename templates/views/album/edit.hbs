@@ -1,0 +1,85 @@
+{{>header}}
+{{>sidebar}}
+<div class="card mb-3">
+    <!--<div class="bg-holder d-none d-lg-block bg-card" style="background-image:url(<?php echo base_url('assets/admin/');?>img/icons/spot-illustrations/corner-4.png);"></div>-->
+    <div class="card-header">
+      <div class="row flex-between-center">
+        <div class="col d-flex justify-content-between">
+          <h5 class="mb-0">{{data}}</h5>
+        </div>
+      </div>
+    </div>
+    <div class="card-body bg-light">
+        <form method="post" enctype="multipart/form-data" action="/update-song">
+        <div class="mb-3 name-cont">
+          <label class="form-label" for="company">Song Title</label>
+          <input type="hidden" id="id" value="{{album.id}}">
+          <input class="form-control" name="name" id="title" type="text" placeholder="Title" value="{{album.name}}"/>
+          <small class="text-danger font-weight-bold" id="title-error"></small>
+        </div>   
+        <div class="mb-3">
+            <label for="productBrand">Category</label>
+                <div class="select2-warning">
+                   
+                <select class="select2" multiple="multiple" data-placeholder="Category" data-dropdown-css-class="select2-warning" style="width: 100%;" name="category" id="category">
+                    <option value="null">Select Category</option>
+                {{#each category}} 
+                    <option value="{{this.id}}">{{this.title}}</option>
+                {{/each}}
+                </select>
+                </div>
+               <small class="text-danger font-weight-bold" id="category-error"></small>
+        </div> 
+        <div class="mb-3">
+            <label class="control-label col-md-3">Album File</label>
+            <div class="white-box">
+              <input type="hidden" id="uploaded_file1" name="uploaded_file1" value="{{album.file}}" />
+              <input type="file" id="uploaded_file" name="uploaded_file" />  
+            </div><br>
+            <span>
+                <audio controls>
+                    <source src="uploads/{{album.file}}" type="audio/mpeg">
+                </audio>
+            </span>
+        </div>
+        <input type="submit" value="Update" class="btn btn-primary">
+        {{!-- <div id="submit-btn-container">
+            <button class="btn btn-success" type="button" >Submit</button>    
+        </div> --}}
+        </form>
+    </div>
+</div>
+{{>footer}}
+<script>
+    $(document).on('click','#save-btn-custom1',function(){ 
+        var reg_email = /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/;
+        var title = $('#title').val();
+        var files = $('#file')[0].files[0];
+        
+        if(title=="")
+        {
+            $('.name-cont').removeClass('mb-3');
+            $('#title-error').text('Enter Title.*').css('font-style','italic');    
+        }else{
+            $('.name-cont').addClass('mb-3');
+            $('#title-error').text('');
+        }
+        
+        if(title!="")
+        {
+
+            $.post("/create-song",{title:title,uploaded_file:files},function(data){
+            console.log(data);
+                if(data === 'success') {
+                  sessionStorage.setItem('saved',true);
+                  window.location.href="/song";
+                }
+            });    
+        }  
+    });
+</script>
+<script>
+    $(function () {
+        $('.select2').select2();
+    });
+</script>
